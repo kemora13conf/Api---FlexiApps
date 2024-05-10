@@ -13,7 +13,7 @@ export default class Database {
         if (this.instance == null) {
             try {
                 const connection = await mongoose.connect(
-                    DATABASE_URL,
+                    DATABASE_URL, // Database URL from the .env file
                     {}
                 );
                 this.instance = connection.connection;
