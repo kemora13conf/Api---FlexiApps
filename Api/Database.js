@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { DATABASE_URL } from './Config/index.js';
+import Logger from './Helpers/Logger.js';
 /**
  * Database class to handle the connection to the database
  * @class Database
@@ -17,10 +18,10 @@ export default class Database {
                     {}
                 );
                 this.instance = connection.connection;
-                console.log('====== DB STATE: Database connected ======');
+                Logger.info('====== DB STATE: Database connected ======');
                 return this.instance;
             } catch (error) {
-                console.log('====== DB STATE: Database connection failed ======');
+                Logger.error('====== DB STATE: Database connection failed ======');
                 throw new Error(error.message);
             }
         }

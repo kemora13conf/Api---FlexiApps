@@ -7,6 +7,9 @@ import { JWT_SECRET, PORT } from "./Api/Config/index.js";
 import User from "./Api/Models/User.js";
 import Database from "./Api/Database.js";
 import jwt from "jsonwebtoken";
+import Logger from "./Api/Helpers/Logger.js";
+import cluster from "node:cluster";
+import os from "os";
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -28,7 +31,7 @@ const server = http.createServer(App);
  */
 export const io = new Server(server, {
   cors: {
-    origin: '*',
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
@@ -69,22 +72,33 @@ io.use(async (socket, next) => {
 });
 
 /**
- * @description This is the event listener that listens to the connection event 
+ * @description This is the event listener that listens to the connection event
  *              and logs the user that connected
  */
 io.on("connection", (socket) => {
-  console.log("a user connected");
+  Logger.info("a user connected");
 
   socket.on("disconnect", () => {
-
     // Remove the user from his room
     socket.leave(socket.user._id.toString());
-    console.log("user disconnected");
+    Logger.info("user disconnected");
   });
 });
 
-server.listen(PORT, () => {
-  console.log("====== SERVER IS RUNNING ======");
-  console.log(`====== PORT: ${PORT}        ======`);
-  console.log("===============================");
-});
+if (cluster.isPrimary) {
+  const cpus = os.cpus().length > 2 ? 2 : os.cpus().length;
+  for (let i = 0; i < cpus; i++) {
+    cluster.fork();
+  }
+
+  cluster.on("exit", (worker) => {
+    Logger.error(`Worker ${worker.id} died`);
+    cluster.fork();
+  });
+} else {
+  server.listen(PORT, () => {
+    Logger.info("====== SERVER IS RUNNING ======");
+    Logger.info(`====== PORT: ${PORT}        ======`);
+    Logger.info("===============================");
+  });
+}

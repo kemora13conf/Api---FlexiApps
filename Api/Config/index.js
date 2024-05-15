@@ -10,7 +10,7 @@ Dotenv.config({
   ),
 });
 
-export const { PORT, JWT_SECRET, DATABASE_URL } = process.env;
+export const { PORT, JWT_SECRET, DATABASE_URL, NODE_ENV } = process.env;
 
 
 

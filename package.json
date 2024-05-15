@@ -6,8 +6,7 @@
   "main": "Server.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon Server.js",
-    "prod": "cross-env NODE_ENV=production nodemon node Server.js",
-    "build": "webpack --config webpack.config.cjs"
+    "prod": "cross-env NODE_ENV=production nodemon node Server.js"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +23,8 @@
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.0",
     "socket.io": "^4.7.5",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
     "html-loader": "^5.0.0"
